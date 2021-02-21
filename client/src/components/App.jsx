@@ -7,9 +7,11 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pokemon: []
+      pokemon: [],
+      page: 'showAll'
     }
     this.getPokemon = this.getPokemon.bind(this);
+    this.handleShowAll = this.handleShowAll.bind(this);
   }
 
   getPokemon() {
@@ -30,25 +32,39 @@ export default class App extends React.Component {
     this.getPokemon();
   }
 
+  handleShowAll() {
+    console.log('entering handleShowAll')
+    this.setState({
+      page: 'showAll'
+    })
+  }
+
+
   render() {
-    return (
-      <div>
-        <h1>Weilly's Fullstack Pokedex!</h1>
-        <button>Show All</button>
-        <select id="types">
-          <option>Sort by Type</option>
-          <option>Grass</option>
-          <option>Fire</option>
-          <option>Water</option>
-        </select>
+    if (this.state.page === 'showAll') {
+      return (
         <div>
-          <PokemonList pokemonList={this.state.pokemon}/>
-          {/* <h3>Bulbasaur</h3>
-          <img
-            src="http://vignette4.wikia.nocookie.net/nintendo/images/4/43/Bulbasaur.png/revision/latest?cb=20141002083518&path-prefix=en" /> */}
+          <h1>Weilly's Fullstack Pokedex!</h1>
+          <button onClick={this.handleShowAll}>Show All</button>
+          <select id="types">
+            <option>Sort by Type</option>
+            <option>Grass</option>
+            <option>Fire</option>
+            <option>Water</option>
+          </select>
+          <div>
+            <PokemonList pokemonList={this.state.pokemon}/>
+          </div>
         </div>
-      </div>
-    )
+      )
+    } else if (this.state.page === type /* may not be right */) {
+      return (
+        <div>
+
+        </div>
+      )
+
+    }
   }
 }
 
