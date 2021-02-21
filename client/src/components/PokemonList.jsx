@@ -10,7 +10,7 @@ const PokemonList = (props) => {
       {props.pokemonList.map((pokemon, key) => {
         return (
           <div key={key}>
-            <Pokemon pokemon={pokemon}/>
+            <Pokemon pokemon={pokemon} getPokemon={props.getPokemon}/>
           </div>
         )
       })}

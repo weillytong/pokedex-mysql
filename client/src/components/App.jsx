@@ -53,7 +53,7 @@ export default class App extends React.Component {
             <option>Water</option>
           </select>
           <div>
-            <PokemonList pokemonList={this.state.pokemon}/>
+            <PokemonList pokemonList={this.state.pokemon} getPokemon={this.getPokemon}/>
           </div>
         </div>
       )
