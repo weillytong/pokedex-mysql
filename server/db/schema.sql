@@ -19,6 +19,9 @@ CREATE TABLE pokemon (
   name VARCHAR(255) NOT NULL,
   typeNum INT,
   imageNum INT
+  -- potentially need to add foreign keys identifiers
+  -- FOREIGN KEY (typeNum) REFERENCES types(id),
+  -- FOREIGN KEY (imageNum) REFERENCES images(id)
 );
 
 INSERT INTO types (type) VALUES ("Grass");
