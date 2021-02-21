@@ -13,22 +13,23 @@ export default class Pokemon extends React.Component {
     this.handleUpdate = this.handleUpdate.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   handleUpdate() {
     this.setState({
       isUpdating: !this.state.isUpdating
-    }, () => {
+    }/*, () => {
       console.log(this.state.isUpdating)
-    })
+    }*/)
   }
 
   handleChange(e) {
     this.setState({
       [e.target.name]: e.target.value
-    }, () => {
+    }/*, () => {
       console.log(this.state)
-    })
+    }*/)
   }
 
   handleSubmit(id, e) {
@@ -38,10 +39,19 @@ export default class Pokemon extends React.Component {
       name: this.state.name
     })
       .then((results) => {
-        window.alert('Changed Pokemon name')
-        this.setState({
-          name: this.state.name
-        })
+        // window.alert('Changed Pokemon name')
+        this.props.getPokemon();
+        this.handleUpdate();
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }
+
+  handleDelete(id, e) {
+    axios.delete(`/api/${id}`)
+      .then((results) => {
+        window.alert('Deleted Pokemon')
         this.props.getPokemon();
         this.handleUpdate();
       })
@@ -60,8 +70,8 @@ export default class Pokemon extends React.Component {
               <input placeholder={this.props.pokemon.name} name='name' onChange={this.handleChange}/>
             </label>
             <button> Change Name </button>
-            <button> Delete</button>
-            <button onClick={this.handleUpdate}> Cancel </button>
+          <button onClick={(e) => this.handleDelete(this.props.pokemon.id, e)}> Delete</button>
+          <button onClick={this.handleUpdate}> Cancel </button>
           </form>
           <img src={this.props.pokemon.img}/>
         </div>
