@@ -21,7 +21,7 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, '../client/dist')))
 
 // Set up routes
-app.get('/api', (req, res) => {
+app.get('/api/pokemon', (req, res) => {
   var queryString = `SELECT pokemon.id, pokemon.name, types.type, images.img FROM pokemon INNER JOIN types ON pokemon.typeNum = types.id INNER JOIN images ON pokemon.imageNum = images.id ORDER BY id ASC`
   db.query(queryString, (err, results) => {
     if (err) {
@@ -32,7 +32,41 @@ app.get('/api', (req, res) => {
   })
 })
 
+app.get('/api/type', (req, res) => {
+  var queryString = `SELECT type FROM types ORDER BY id ASC`
+  db.query(queryString, (err, results) => {
+    if (err) {
+      res.status(400).json(err);
+    } else {
+      res.status(200).json(results)
+    }
+  })
+})
+
+// *** GET FOR JUST A SPECIFIC TYPE
+app.get('/api/:type', (req, res) => {
+  var queryString = `SELECT
+    pokemon.id,
+    pokemon.name,
+    types.type,
+    images.img
+    FROM pokemon INNER JOIN types
+    ON pokemon.typeNum = types.id
+    INNER JOIN images
+    ON pokemon.imageNum = images.id WHERE types.type='${req.params.type}' ORDER BY id ASC`
+  db.query(queryString, (err, results) => {
+    if (err) {
+      res.status(400).json(err);
+    } else {
+      res.status(200).json(results)
+    }
+  })
+})
+
+
 // *** POST is a stretch goal to add pokemon
+
+// *** GET POKEMON OF ONE TYPE
 app.delete('/api/:id', (req, res) => {
   var queryString = `DELETE FROM pokemon WHERE id=${req.params.id}`
   db.query(queryString, (err, results) => {

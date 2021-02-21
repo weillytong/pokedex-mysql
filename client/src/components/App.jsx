@@ -1,5 +1,6 @@
 import React from 'react';
 import PokemonList from './PokemonList.jsx';
+import TypeList from './TypeList.jsx';
 import axios from 'axios';
 
 
@@ -8,14 +9,16 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       pokemon: [],
-      page: 'showAll'
+      type: [],
+      selectedType: ''
     }
     this.getPokemon = this.getPokemon.bind(this);
-    this.handleShowAll = this.handleShowAll.bind(this);
+    this.getType = this.getType.bind(this);
+    this.handleTypeChange = this.handleTypeChange.bind(this);
   }
 
   getPokemon() {
-    axios.get('/api')
+    axios.get('/api/pokemon')
       .then((results) => {
         this.setState({
           pokemon: results.data
@@ -28,76 +31,56 @@ export default class App extends React.Component {
       })
   }
 
-  componentDidMount() {
-    this.getPokemon();
+  getType() {
+    axios.get('/api/type')
+      .then((results) => {
+        this.setState({
+          type: results.data
+        }, () => {
+          console.log(this.state)
+        })
+      })
+      .catch((err) => {
+        console.log(err);
+      })
   }
 
-  handleShowAll() {
-    console.log('entering handleShowAll')
+  componentDidMount() {
+    this.getPokemon();
+    this.getType();
+  }
+
+
+  handleTypeChange(e) {
+    // After setting the state, the callback invokes get request on that selected Type
     this.setState({
-      page: 'showAll'
+      selectType: e.target.value
+    }, () => {
+      console.log(this.state.selectType)
+      axios.get(`/api/${this.state.selectType}`)
+        .then((results) => {
+          this.setState({
+            pokemon: results.data
+          })
+        })
+        .catch((err) => {
+          console.log(err);
+        })
     })
   }
 
 
   render() {
-    if (this.state.page === 'showAll') {
-      return (
+    return (
+      <div>
+        <h1>Weilly's Fullstack Pokedex!</h1>
+        <button onClick={this.getPokemon}>Show All</button>
+        <TypeList typeList={this.state.type} handleTypeChange={this.handleTypeChange}/>
         <div>
-          <h1>Weilly's Fullstack Pokedex!</h1>
-          <button onClick={this.handleShowAll}>Show All</button>
-          <select id="types">
-            <option>Sort by Type</option>
-            <option>Grass</option>
-            <option>Fire</option>
-            <option>Water</option>
-          </select>
-          <div>
-            <PokemonList pokemonList={this.state.pokemon} getPokemon={this.getPokemon}/>
-          </div>
+          <PokemonList pokemonList={this.state.pokemon} getPokemon={this.getPokemon}/>
         </div>
-      )
-    } else if (this.state.page === type /* may not be right */) {
-      return (
-        <div>
-
-        </div>
-      )
-
-    }
+      </div>
+    )
   }
 }
 
-
-
-
-
-
-
-
-// const App = () => (
-//   <div>
-//     <h1>Fullstack Pokedex!</h1>
-//     <button>Show All</button>
-//     <select id="types">
-//       <option>Sort by Type</option>
-//       <option>Grass</option>
-//       <option>Fire</option>
-//       <option>Water</option>
-//     </select>
-//     <div>
-//       <h3>Bulbasaur</h3>
-//       <img src="http://vignette4.wikia.nocookie.net/nintendo/images/4/43/Bulbasaur.png/revision/latest?cb=20141002083518&path-prefix=en" />
-//     </div>
-//     <div>
-//       <h3>Ivysaur</h3>
-//       <img src="http://vignette3.wikia.nocookie.net/nintendo/images/8/86/Ivysaur.png/revision/latest?cb=20141002083450&path-prefix=en" />
-//     </div>
-//     <div>
-//       <h3>Venusaur</h3>
-//       <img src="http://vignette2.wikia.nocookie.net/nintendo/images/b/be/Venusaur.png/revision/latest?cb=20141002083423&path-prefix=en" />
-//     </div>
-//   </div>
-// )
-
-// export default App;
